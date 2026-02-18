@@ -1,6 +1,6 @@
 # LMS Portal - Learning Management System Template
 
-A modern, responsive Learning Management System (LMS) template built with React, Vite, and Tailwind CSS. Features dual role support (Student/Teacher) with a beautiful UI and comprehensive functionality.
+A modern, responsive Learning Management System (LMS) template built with React, Vite, and Tailwind CSS. Features dual role support (Student/Teacher) with a beautiful UI and comprehensive functionality including assignments, calendar, messaging, analytics, and grades.
 
 ## Features
 
@@ -11,7 +11,7 @@ A modern, responsive Learning Management System (LMS) template built with React,
 - Fully responsive layout
 
 ### 🏗️ Layout
-- **280px Fixed Sidebar**: Home, Courses, and Settings navigation
+- **280px Fixed Sidebar**: Role-based navigation with 7 menu items
 - **Sticky Topbar**: Search bar, role switcher, notifications, and profile
 - Clean, organized content area
 
@@ -26,25 +26,53 @@ A modern, responsive Learning Management System (LMS) template built with React,
   - Completion percentage
   - Revenue tracking
   - Edit and Analytics buttons
+- **Assignments Management**: Review and grade student submissions with status tracking
+- **Analytics Dashboard**: Comprehensive performance tracking with:
+  - Engagement rates and trends
+  - Student performance metrics
+  - Course-level analytics
+  - Top performers leaderboard
+  - Course comparison table
+- **Calendar**: Schedule view with event management and upcoming deadlines
+- **Messages**: Real-time messaging interface with students
 - **"+ New Course" CTA**: Quick access to create new courses
 
 ### 👨‍🎓 Student Role
-- **"Continue Learning" Hero Card**: Resume last accessed course with:
-  - Course progress visualization
-  - Time remaining
-  - Current lesson info
-- **Course Grid**: 3-column grid of enrolled courses with:
-  - Course thumbnails
-  - Progress bars
-  - Instructor information
-  - Lesson tracking
+- **Dashboard**: 
+  - **"Continue Learning" Hero Card**: Resume last accessed course with:
+    - Course progress visualization
+    - Time remaining
+    - Current lesson info
+  - **Course Grid**: 3-column grid of enrolled courses with:
+    - Course thumbnails
+    - Progress bars
+    - Instructor information
+    - Lesson tracking
+- **Assignments**: Track all assignments with:
+  - Status overview (Pending, Submitted, Overdue)
+  - Due dates and submission status
+  - Grade viewing
+  - Quick submission actions
+- **Grades**: Comprehensive grade tracking with:
+  - Overall GPA and statistics
+  - Course-by-course breakdown
+  - Assignment scores and weights
+  - Grade distribution visualization
+  - Letter grade display
+- **Calendar**: Personal schedule with:
+  - Monthly calendar view
+  - Assignment deadlines
+  - Quiz and exam dates
+  - Class sessions
+  - Upcoming events list
+- **Messages**: Direct communication with instructors
 - **Profile Edit Page**: Tabbed interface with:
   - **Bio Tab**: Edit name, email, and bio
   - **Avatar Tab**: Choose emoji or upload image
   - **Security Tab**: Password management with requirements
 
 ### 🔄 Role Switcher
-Toggle seamlessly between Student and Teacher views using the switcher in the topbar.
+Toggle seamlessly between Student and Teacher views using the switcher in the topbar. Navigation menu updates dynamically based on the selected role.
 
 ## Tech Stack
 
@@ -92,33 +120,81 @@ npm run preview
 
 ```
 src/
-├── components/         # Reusable UI components
-│   ├── Sidebar.jsx    # Navigation sidebar
-│   ├── Topbar.jsx     # Top navigation bar with role switcher
-│   ├── TeacherStats.jsx      # Teacher statistics cards
-│   ├── CourseTable.jsx       # Teacher course management table
-│   ├── ContinueLearning.jsx  # Student hero card
-│   ├── CourseGrid.jsx        # Student course grid
-│   └── ProfileEdit.jsx       # Settings profile editor
-├── pages/             # Page components
-│   ├── TeacherDashboard.jsx  # Teacher home page
-│   ├── StudentDashboard.jsx  # Student home page
-│   ├── Courses.jsx           # Courses page (role-aware)
-│   └── Settings.jsx          # Settings page
-├── data/              # Mock data
-│   └── mockData.js    # Sample courses, stats, users
-├── App.jsx            # Main app component
-├── main.jsx           # App entry point
-└── index.css          # Global styles with Tailwind
+├── components/              # Reusable UI components
+│   ├── Sidebar.jsx         # Navigation sidebar (role-aware)
+│   ├── Topbar.jsx          # Top navigation bar with role switcher
+│   ├── TeacherStats.jsx    # Teacher statistics cards
+│   ├── CourseTable.jsx     # Teacher course management table
+│   ├── ContinueLearning.jsx # Student hero card
+│   ├── CourseGrid.jsx      # Student course grid
+│   └── ProfileEdit.jsx     # Settings profile editor
+├── pages/                   # Page components
+│   ├── TeacherDashboard.jsx # Teacher home page
+│   ├── StudentDashboard.jsx # Student home page
+│   ├── Courses.jsx         # Courses page (role-aware)
+│   ├── Assignments.jsx     # Assignment management (role-aware)
+│   ├── Grades.jsx          # Student grades and GPA tracking
+│   ├── Analytics.jsx       # Teacher analytics dashboard
+│   ├── Calendar.jsx        # Schedule and events (role-aware)
+│   ├── Messages.jsx        # Messaging interface (role-aware)
+│   └── Settings.jsx        # Settings page
+├── data/                    # Mock data
+│   └── mockData.js         # Sample courses, stats, users, assignments, etc.
+├── App.jsx                  # Main app component with routing
+├── main.jsx                 # App entry point
+└── index.css                # Global styles with Tailwind
+```
+
+## Key Features by Page
+
+### 📊 Dashboard
+- **Teacher**: Statistics overview, course performance, quick actions
+- **Student**: Continue learning card, enrolled courses grid
+
+### 📚 Courses
+- **Teacher**: Create and manage courses, track enrollments
+- **Student**: Browse enrolled courses, view progress
+
+### 📝 Assignments
+- **Teacher**: Review submissions, grade assignments, track deadlines
+- **Student**: View pending/submitted assignments, upload work, check grades
+
+### 📈 Analytics (Teacher Only)
+- Engagement metrics across all courses
+- Top performers leaderboard
+- Course performance comparison
+- Student activity trends
+
+### 🎓 Grades (Student Only)
+- Overall GPA calculation
+- Detailed grade breakdown by course
+- Assignment scores and weights
+- Grade distribution charts
+
+### 📅 Calendar
+- Monthly calendar view
+- Color-coded events (assignments, classes, quizzes, exams)
+- Upcoming events sidebar
+- **Teacher**: Add new events
+- **Student**: View schedules and deadlines
+
+### 💬 Messages
+- Real-time chat interface
+- Conversation list with unread indicators
+- Search functionality
+- Student-instructor communication
 ```
 
 ## Customization
 
 ### Mock Data
 Edit `src/data/mockData.js` to customize:
-- Teacher statistics
-- Course listings
-- Student progress
+- Teacher statistics and course data
+- Student courses and progress
+- Assignment submissions and grades
+- Calendar events and schedules
+- Message conversations
+- Analytics and performance metrics
 - User profiles
 
 ### Styling
@@ -128,6 +204,17 @@ The app uses Tailwind CSS. Customize colors and styles in:
 
 ### Icons
 Icons from Lucide React are used throughout. Browse available icons at [lucide.dev](https://lucide.dev/)
+
+## Feature Highlights
+
+✅ **7 Complete Pages** for each role  
+✅ **Assignment Management** with submission tracking  
+✅ **Grade Tracking** with GPA calculation  
+✅ **Analytics Dashboard** with engagement metrics  
+✅ **Interactive Calendar** with event types  
+✅ **Messaging System** with real-time UI  
+✅ **Role-Based Navigation** that adapts to user type  
+✅ **Comprehensive Mock Data** for realistic demo experience
 
 ## License
 

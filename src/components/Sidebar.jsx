@@ -1,11 +1,27 @@
-import { Home, BookOpen, Settings } from 'lucide-react';
+import { Home, BookOpen, Settings, ClipboardList, Calendar, MessageSquare, BarChart3, Award } from 'lucide-react';
 
-const Sidebar = ({ activeTab, setActiveTab }) => {
-  const menuItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'courses', label: 'Courses', icon: BookOpen },
+const Sidebar = ({ activeTab, setActiveTab, role }) => {
+  const studentMenuItems = [
+    { id: 'home', label: 'Dashboard', icon: Home },
+    { id: 'courses', label: 'My Courses', icon: BookOpen },
+    { id: 'assignments', label: 'Assignments', icon: ClipboardList },
+    { id: 'grades', label: 'Grades', icon: Award },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
+
+  const teacherMenuItems = [
+    { id: 'home', label: 'Dashboard', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
+    { id: 'assignments', label: 'Assignments', icon: ClipboardList },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
+
+  const menuItems = role === 'teacher' ? teacherMenuItems : studentMenuItems;
 
   return (
     <aside className="w-[280px] min-h-screen bg-white border-r border-slate-200 fixed left-0 top-0">
