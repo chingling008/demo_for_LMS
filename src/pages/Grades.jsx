@@ -1,7 +1,39 @@
 import { Award, TrendingUp, TrendingDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { gradesApi } from '../services/api';
 import { studentGrades, gradeStats } from '../data/mockData';
 
 const Grades = () => {
+  const [grades, setGrades] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        setLoading(true);
+        const [gradesData, statsData] = await Promise.all([
+          gradesApi.getAll().catch(() => studentGrades),
+          gradesApi.getStats().catch(() => gradeStats),
+        ]);
+        setGrades(gradesData);
+        setStats(statsData);
+      } catch (err) {
+        setError(err.message || 'Failed to load grades');
+        setGrades(studentGrades);
+        setStats(gradeStats);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGrades();
+  }, []);
+
+  if (loading) return <LoadingSpinner fullScreen message="Loading grades..." />;
+  if (error && !stats) return <ErrorMessage message={error} fullScreen />;
   const getGradeColor = (grade) => {
     if (grade >= 90) return 'text-green-600 bg-green-100';
     if (grade >= 80) return 'text-blue-600 bg-blue-100';
@@ -33,7 +65,7 @@ const Grades = () => {
             </div>
           </div>
           <h3 className="text-slate-600 text-sm mb-1">Overall GPA</h3>
-          <p className="text-3xl font-bold text-slate-900">{gradeStats.gpa}</p>
+          <p className="text-3xl font-bold text-slate-900">{(stats || gradeStats).gpa}</p>
         </div>
 
         <div className="bg-white rounded-xl p-6 border border-slate-200">
@@ -43,7 +75,7 @@ const Grades = () => {
             </div>
           </div>
           <h3 className="text-slate-600 text-sm mb-1">Average Score</h3>
-          <p className="text-3xl font-bold text-slate-900">{gradeStats.average}%</p>
+          <p className="text-3xl font-bold text-slate-900">{(stats || gradeStats).average}%</p>
         </div>
 
         <div className="bg-white rounded-xl p-6 border border-slate-200">
@@ -53,7 +85,7 @@ const Grades = () => {
             </div>
           </div>
           <h3 className="text-slate-600 text-sm mb-1">Highest Grade</h3>
-          <p className="text-3xl font-bold text-slate-900">{gradeStats.highest}%</p>
+          <p className="text-3xl font-bold text-slate-900">{(stats || gradeStats).highest}%</p>
         </div>
 
         <div className="bg-white rounded-xl p-6 border border-slate-200">
@@ -63,7 +95,7 @@ const Grades = () => {
             </div>
           </div>
           <h3 className="text-slate-600 text-sm mb-1">Lowest Grade</h3>
-          <p className="text-3xl font-bold text-slate-900">{gradeStats.lowest}%</p>
+          <p className="text-3xl font-bold text-slate-900">{(stats || gradeStats).lowest}%</p>
         </div>
       </div>
 
@@ -97,7 +129,7 @@ const Grades = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
-            {studentGrades.map((grade) => (
+            {(grades.length > 0 ? grades : studentGrades).map((grade) => (
               <tr key={grade.id} className="hover:bg-slate-50 transition-colors">
                 <td className="px-6 py-4">
                   <div className="font-semibold text-slate-900">{grade.course}</div>

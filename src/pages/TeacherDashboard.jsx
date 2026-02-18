@@ -1,9 +1,43 @@
 import { Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import TeacherStats from '../components/TeacherStats';
 import CourseTable from '../components/CourseTable';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { dashboardApi, coursesApi } from '../services/api';
 import { teacherStats, teacherCourses } from '../data/mockData';
 
 const TeacherDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [courses, setCourses] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [statsData, coursesData] = await Promise.all([
+          dashboardApi.getTeacherStats().catch(() => teacherStats),
+          coursesApi.getAll('teacher').catch(() => teacherCourses),
+        ]);
+        setStats(statsData);
+        setCourses(coursesData);
+      } catch (err) {
+        setError(err.message || 'Failed to load dashboard');
+        // Fallback to mock data
+        setStats(teacherStats);
+        setCourses(teacherCourses);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <LoadingSpinner fullScreen message="Loading dashboard..." />;
+  if (error && !stats) return <ErrorMessage message={error} fullScreen />;
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -17,13 +51,13 @@ const TeacherDashboard = () => {
         </button>
       </div>
 
-      <TeacherStats stats={teacherStats} />
+      <TeacherStats stats={stats || teacherStats} />
 
       <div className="mb-4">
         <h2 className="text-xl font-bold text-slate-900 mb-4">Your Courses</h2>
       </div>
       
-      <CourseTable courses={teacherCourses} />
+      <CourseTable courses={courses || teacherCourses} />
     </div>
   );
 };

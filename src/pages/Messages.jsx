@@ -1,22 +1,71 @@
 import { Search, Send, MoreVertical } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { messagesApi } from '../services/api';
 import { conversations, messages } from '../data/mockData';
 
 const Messages = ({ role }) => {
-  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
+  const [conversationsList, setConversationsList] = useState([]);
+  const [messagesList, setMessagesList] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
   const [messageText, setMessageText] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const conversationMessages = messages.filter(
-    msg => msg.conversationId === selectedConversation.id
-  );
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        setLoading(true);
+        const data = await messagesApi.getConversations().catch(() => conversations);
+        setConversationsList(data);
+        if (data.length > 0) {
+          setSelectedConversation(data[0]);
+        }
+      } catch (err) {
+        setError(err.message || 'Failed to load conversations');
+        setConversationsList(conversations);
+        if (conversations.length > 0) {
+          setSelectedConversation(conversations[0]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConversations();
+  }, []);
 
-  const handleSendMessage = () => {
-    if (messageText.trim()) {
-      // In a real app, this would send the message to the backend
-      console.log('Sending message:', messageText);
-      setMessageText('');
+  useEffect(() => {
+    if (selectedConversation) {
+      const fetchMessages = async () => {
+        try {
+          const data = await messagesApi.getMessages(selectedConversation.id)
+            .catch(() => messages.filter(m => m.conversationId === selectedConversation.id));
+          setMessagesList(data);
+        } catch (err) {
+          setMessagesList(messages.filter(m => m.conversationId === selectedConversation.id));
+        }
+      };
+      fetchMessages();
+    }
+  }, [selectedConversation]);
+
+  const handleSendMessage = async () => {
+    if (messageText.trim() && selectedConversation) {
+      try {
+        await messagesApi.sendMessage(selectedConversation.id, { text: messageText });
+        setMessageText('');
+        // Refresh messages
+        const data = await messagesApi.getMessages(selectedConversation.id);
+        setMessagesList(data);
+      } catch (err) {
+        console.error('Failed to send message:', err);
+      }
     }
   };
+
+  if (loading) return <LoadingSpinner fullScreen message="Loading messages..." />;
+  if (error && conversationsList.length === 0) return <ErrorMessage message={error} fullScreen />;
 
   return (
     <div>
@@ -40,7 +89,7 @@ const Messages = ({ role }) => {
           </div>
           
           <div className="flex-1 overflow-y-auto">
-            {conversations.map((conversation) => (
+            {(conversationsList.length > 0 ? conversationsList : conversations).map((conversation) => (
               <div
                 key={conversation.id}
                 onClick={() => setSelectedConversation(conversation)}
@@ -88,7 +137,7 @@ const Messages = ({ role }) => {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {conversationMessages.map((message) => (
+            {messagesList.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}

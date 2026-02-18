@@ -1,9 +1,34 @@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { calendarApi } from '../services/api';
 import { calendarEvents } from '../data/mockData';
 
 const Calendar = ({ role }) => {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 1, 18)); // Feb 18, 2026
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const data = await calendarApi.getEvents(
+          currentDate.getMonth() + 1,
+          currentDate.getFullYear()
+        ).catch(() => calendarEvents);
+        setEvents(data);
+      } catch (err) {
+        setError(err.message || 'Failed to load calendar events');
+        setEvents(calendarEvents);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, [currentDate]);
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -18,7 +43,7 @@ const Calendar = ({ role }) => {
   };
 
   const getEventsForDay = (day) => {
-    return calendarEvents.filter(event => {
+    return (events.length > 0 ? events : calendarEvents).filter(event => {
       const eventDate = new Date(event.date);
       return eventDate.getDate() === day &&
              eventDate.getMonth() === currentDate.getMonth() &&
@@ -83,6 +108,8 @@ const Calendar = ({ role }) => {
 
   return (
     <div>
+      {loading && <LoadingSpinner message="Loading calendar..." />}
+      
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Calendar</h1>
@@ -147,7 +174,7 @@ const Calendar = ({ role }) => {
       <div className="mt-6 bg-white rounded-xl border border-slate-200 p-6">
         <h3 className="text-xl font-bold text-slate-900 mb-4">Upcoming Events</h3>
         <div className="space-y-3">
-          {calendarEvents.slice(0, 5).map((event) => (
+          {(events.length > 0 ? events : calendarEvents).slice(0, 5).map((event) => (
             <div key={event.id} className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-lg transition-colors">
               <div className={`w-2 h-2 rounded-full ${getEventColor(event.type)}`}></div>
               <div className="flex-1">

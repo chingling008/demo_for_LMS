@@ -1,8 +1,35 @@
 import { Calendar, Clock, CheckCircle, AlertCircle, Upload } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { assignmentsApi } from '../services/api';
 import { studentAssignments, teacherAssignments } from '../data/mockData';
 
 const Assignments = ({ role }) => {
-  const assignments = role === 'teacher' ? teacherAssignments : studentAssignments;
+  const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        setLoading(true);
+        const data = await assignmentsApi.getAll(role).catch(() => 
+          role === 'teacher' ? teacherAssignments : studentAssignments
+        );
+        setAssignments(data);
+      } catch (err) {
+        setError(err.message || 'Failed to load assignments');
+        setAssignments(role === 'teacher' ? teacherAssignments : studentAssignments);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAssignments();
+  }, [role]);
+
+  if (loading) return <LoadingSpinner fullScreen message="Loading assignments..." />;
+  if (error && assignments.length === 0) return <ErrorMessage message={error} fullScreen />;
 
   const getStatusColor = (status) => {
     switch (status) {

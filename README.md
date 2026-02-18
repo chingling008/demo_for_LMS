@@ -1,6 +1,27 @@
 # LMS Portal - Learning Management System Template
 
-A modern, responsive Learning Management System (LMS) template built with React, Vite, and Tailwind CSS. Features dual role support (Student/Teacher) with a beautiful UI and comprehensive functionality including assignments, calendar, messaging, analytics, and grades.
+A modern, responsive Learning Management System (LMS) template built with React, Vite, Tailwind CSS, and MongoDB. Features dual role support (Student/Teacher) with a beautiful UI, comprehensive functionality including assignments, calendar, messaging, analytics, and grades, plus full backend API integration.
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The application will run at `http://localhost:5173/` with mock data. For full backend integration, see [API Integration Guide](./API_INTEGRATION.md).
+
+## 🔧 Tech Stack
+
+- **Frontend**: React 19.2, Vite 7.3, Tailwind CSS 4.1
+- **Icons**: Lucide React
+- **HTTP Client**: Axios
+- **Backend Ready**: MongoDB integration with REST API
+- **State Management**: React Context API
+- **Code Quality**: ESLint
 
 ## Features
 
@@ -74,13 +95,17 @@ A modern, responsive Learning Management System (LMS) template built with React,
 ### 🔄 Role Switcher
 Toggle seamlessly between Student and Teacher views using the switcher in the topbar. Navigation menu updates dynamically based on the selected role.
 
-## Tech Stack
+## 📡 Backend Integration
 
-- **React 19.2** - UI library
-- **Vite 7.3** - Build tool and dev server
-- **Tailwind CSS 4.1** - Utility-first CSS framework
-- **Lucide React** - Beautiful icon library
-- **ESLint** - Code quality
+This application includes full MongoDB backend integration:
+
+- **REST API** with Express.js
+- **MongoDB** for data persistence  
+- **JWT Authentication** for secure access
+- **Axios** for HTTP requests
+- **Graceful Fallbacks** to mock data when backend is unavailable
+
+See [API_INTEGRATION.md](./API_INTEGRATION.md) for complete API documentation and setup instructions.
 
 ## Getting Started
 
@@ -89,6 +114,16 @@ Toggle seamlessly between Student and Teacher views using the switcher in the to
 ```bash
 npm install
 ```
+
+### Environment Setup
+
+Create a `.env` file in the root directory:
+
+```bash
+cp .env.example .env
+```
+
+Update the `VITE_API_URL` in `.env` to point to your backend API (default: `http://localhost:5000/api`).
 
 ### Development
 
@@ -99,6 +134,8 @@ npm run dev
 ```
 
 The app will be available at `http://localhost:5173/`
+
+**Note**: The application works standalone with mock data. To enable full backend features, ensure your MongoDB backend server is running.
 
 ### Build
 
@@ -115,6 +152,20 @@ Preview the production build locally:
 ```bash
 npm run preview
 ```
+
+## API Integration
+
+The frontend is fully integrated with backend API endpoints:
+
+- **Authentication**: Login, register, JWT tokens
+- **Data Persistence**: All actions saved to MongoDB
+- **Real-time Updates**: Automatic data refresh
+- **Error Handling**: Graceful fallbacks to mock data
+- **Loading States**: Spinner components during API calls
+
+All pages automatically fetch data from the API when available, with seamless fallback to mock data if the backend is not running. This allows frontend development without requiring the backend to be operational.
+
+For detailed API documentation, endpoint specifications, and backend setup instructions, see [API_INTEGRATION.md](./API_INTEGRATION.md).
 
 ## Project Structure
 

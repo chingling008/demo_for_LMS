@@ -1,7 +1,43 @@
 import { TrendingUp, BarChart3, Users, Award } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { analyticsApi } from '../services/api';
 import { analyticsData, engagementData, topPerformers } from '../data/mockData';
 
 const Analytics = () => {
+  const [overview, setOverview] = useState([]);
+  const [engagement, setEngagement] = useState([]);
+  const [performers, setPerformers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
+        const [overviewData, engagementData, performersData] = await Promise.all([
+          analyticsApi.getOverview().catch(() => analyticsData),
+          analyticsApi.getEngagement().catch(() => engagementData),
+          analyticsApi.getTopPerformers().catch(() => topPerformers),
+        ]);
+        setOverview(overviewData);
+        setEngagement(engagementData);
+        setPerformers(performersData);
+      } catch (err) {
+        setError(err.message || 'Failed to load analytics');
+        setOverview(analyticsData);
+        setEngagement(engagementData);
+        setPerformers(topPerformers);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, []);
+
+  if (loading) return <LoadingSpinner fullScreen message="Loading analytics..." />;
+  if (error && overview.length === 0) return <ErrorMessage message={error} fullScreen />;
   return (
     <div>
       <div className="mb-6">
@@ -11,7 +47,7 @@ const Analytics = () => {
 
       {/* Overview Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        {analyticsData.map((stat) => (
+        {(overview.length > 0 ? overview : analyticsData).map((stat) => (
           <div key={stat.id} className="bg-white rounded-xl p-6 border border-slate-200">
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-lg ${stat.color}`}>
@@ -35,7 +71,7 @@ const Analytics = () => {
         <div className="bg-white rounded-xl border border-slate-200 p-6">
           <h3 className="text-xl font-bold text-slate-900 mb-4">Student Engagement</h3>
           <div className="space-y-4">
-            {engagementData.map((course) => (
+            {(engagement.length > 0 ? engagement : engagementData).map((course) => (
               <div key={course.id}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-semibold text-slate-900">{course.name}</span>
@@ -56,7 +92,7 @@ const Analytics = () => {
         <div className="bg-white rounded-xl border border-slate-200 p-6">
           <h3 className="text-xl font-bold text-slate-900 mb-4">Top Performers</h3>
           <div className="space-y-4">
-            {topPerformers.map((student, index) => (
+            {(performers.length > 0 ? performers : topPerformers).map((student, index) => (
               <div key={student.id} className="flex items-center gap-4">
                 <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-white ${
                   index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-slate-400' : 'bg-orange-600'
@@ -92,7 +128,7 @@ const Analytics = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {engagementData.map((course) => (
+                {(engagement.length > 0 ? engagement : engagementData).map((course) => (
                   <tr key={course.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4 font-semibold text-slate-900">{course.name}</td>
                     <td className="px-6 py-4 text-slate-600">{course.enrolled}</td>
