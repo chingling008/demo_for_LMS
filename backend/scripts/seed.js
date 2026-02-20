@@ -42,7 +42,7 @@ const seedDatabase = async () => {
       password: 'password123',
       role: 'student',
       avatar: '👤',
-      bio: 'Passionate learner exploring web development and modern JavaScript frameworks.',
+      bio: 'Passionate about supply chain optimization and logistics management. Focused on leveraging data analytics to drive business efficiency.',
     });
 
     const teacher1 = await User.create({
@@ -51,7 +51,7 @@ const seedDatabase = async () => {
       password: 'password123',
       role: 'teacher',
       avatar: '👩‍🏫',
-      bio: 'React specialist with 10 years of teaching experience.',
+      bio: 'Supply chain expert with 15 years in logistics operations and management.',
     });
 
     const teacher2 = await User.create({
@@ -60,7 +60,7 @@ const seedDatabase = async () => {
       password: 'password123',
       role: 'teacher',
       avatar: '👨‍🏫',
-      bio: 'JavaScript expert and full-stack developer.',
+      bio: 'Business analytics specialist focused on data-driven decision making.',
     });
 
     const teacher3 = await User.create({
@@ -69,17 +69,17 @@ const seedDatabase = async () => {
       password: 'password123',
       role: 'teacher',
       avatar: '👩‍🎨',
-      bio: 'UI/UX designer and web design instructor.',
+      bio: 'Transportation and logistics operations expert with global experience.',
     });
 
     // Create courses
     console.log('📚 Creating courses...');
     const course1 = await Course.create({
-      title: 'Introduction to React',
-      description: 'Learn the fundamentals of React and build modern web applications.',
+      title: 'Supply Chain Management Fundamentals',
+      description: 'Master the core principles of supply chain management, logistics, and operations optimization.',
       instructor: teacher1._id,
       instructorName: teacher1.name,
-      thumbnail: '🎯',
+      thumbnail: '📦',
       duration: '12 hours',
       totalLessons: 12,
       status: 'Active',
@@ -89,11 +89,11 @@ const seedDatabase = async () => {
     });
 
     const course2 = await Course.create({
-      title: 'Advanced JavaScript',
-      description: 'Master advanced JavaScript concepts and patterns.',
+      title: 'Business Analytics & Data-Driven Decisions',
+      description: 'Learn to leverage data analytics for strategic business decisions and forecasting.',
       instructor: teacher2._id,
       instructorName: teacher2.name,
-      thumbnail: '💻',
+      thumbnail: '📊',
       duration: '18 hours',
       totalLessons: 18,
       status: 'Active',
@@ -103,11 +103,11 @@ const seedDatabase = async () => {
     });
 
     const course3 = await Course.create({
-      title: 'Web Design Fundamentals',
-      description: 'Learn the principles of great web design.',
+      title: 'Logistics Operations & Transportation',
+      description: 'Comprehensive guide to transportation management, route optimization, and logistics excellence.',
       instructor: teacher3._id,
       instructorName: teacher3.name,
-      thumbnail: '🎨',
+      thumbnail: '🚚',
       duration: '10 hours',
       totalLessons: 10,
       status: 'Active',
@@ -127,8 +127,8 @@ const seedDatabase = async () => {
       course: course1._id,
       lessonsCompleted: 9,
       totalLessons: 12,
-      currentLesson: 'React Hooks Deep Dive',
-      nextLesson: 'Context API',
+      currentLesson: 'Supply Chain Network Design',
+      nextLesson: 'Demand Forecasting Methods',
       progressPercentage: 75,
     });
 
@@ -137,8 +137,8 @@ const seedDatabase = async () => {
       course: course2._id,
       lessonsCompleted: 8,
       totalLessons: 18,
-      currentLesson: 'Async/Await Patterns',
-      nextLesson: 'Promise Chaining',
+      currentLesson: 'Predictive Analytics in Supply Chain',
+      nextLesson: 'Data Visualization Techniques',
       progressPercentage: 45,
     });
 
@@ -147,16 +147,16 @@ const seedDatabase = async () => {
       course: course3._id,
       lessonsCompleted: 9,
       totalLessons: 10,
-      currentLesson: 'Responsive Design',
-      nextLesson: 'Final Project',
+      currentLesson: 'Route Optimization Strategies',
+      nextLesson: 'Final Project: Transportation Plan',
       progressPercentage: 90,
     });
 
     // Create assignments
     console.log('📝 Creating assignments...');
     const assignment1 = await Assignment.create({
-      title: 'React Hooks Deep Dive',
-      description: 'Build a complex application using React Hooks',
+      title: 'Supply Chain Network Design Case Study',
+      description: 'Analyze and design an optimized supply chain network for a global logistics company',
       course: course1._id,
       instructor: teacher1._id,
       dueDate: new Date('2026-02-20'),
@@ -166,8 +166,8 @@ const seedDatabase = async () => {
     });
 
     const assignment2 = await Assignment.create({
-      title: 'Component State Management',
-      description: 'Implement state management in React components',
+      title: 'Bullwhip Effect Analysis',
+      description: 'Identify and propose solutions to minimize the bullwhip effect in supply chains',
       course: course1._id,
       instructor: teacher1._id,
       dueDate: new Date('2026-02-15'),
@@ -176,16 +176,16 @@ const seedDatabase = async () => {
       status: 'Active',
       submissions: [{
         student: student._id,
-        content: 'My submission for state management',
+        content: 'My analysis of bullwhip effect mitigation strategies',
         status: 'Graded',
         grade: 95,
-        feedback: 'Excellent work!',
+        feedback: 'Excellent analysis of demand variance!',
       }],
     });
 
     const assignment3 = await Assignment.create({
-      title: 'Async/Await Exercise',
-      description: 'Practice asynchronous JavaScript',
+      title: 'Demand Forecasting Analysis',
+      description: 'Use statistical methods to forecast product demand',
       course: course2._id,
       instructor: teacher2._id,
       dueDate: new Date('2026-02-22'),
@@ -202,7 +202,7 @@ const seedDatabase = async () => {
       assignment: assignment2._id,
       points: 95,
       maxPoints: 100,
-      feedback: 'Great understanding of state management!',
+      feedback: 'Excellent understanding of supply chain dynamics!',
       gradedBy: teacher1._id,
     });
 
@@ -212,14 +212,14 @@ const seedDatabase = async () => {
       assignment: assignment3._id,
       points: 92,
       maxPoints: 100,
-      feedback: 'Excellent design work!',
+      feedback: 'Outstanding route optimization work!',
       gradedBy: teacher3._id,
     });
 
     // Create calendar events
     console.log('📅 Creating calendar events...');
     await CalendarEvent.create({
-      title: 'React Hooks Assignment Due',
+      title: 'Supply Chain Case Study Due',
       course: course1._id,
       type: 'assignment',
       date: new Date('2026-02-20'),
@@ -229,7 +229,7 @@ const seedDatabase = async () => {
     });
 
     await CalendarEvent.create({
-      title: 'Live Coding Session',
+      title: 'Live Business Analytics Workshop',
       course: course2._id,
       type: 'class',
       date: new Date('2026-02-19'),
@@ -239,7 +239,7 @@ const seedDatabase = async () => {
     });
 
     await CalendarEvent.create({
-      title: 'Midterm Quiz',
+      title: 'Procurement Strategy Quiz',
       course: course2._id,
       type: 'quiz',
       date: new Date('2026-02-21'),
@@ -254,19 +254,19 @@ const seedDatabase = async () => {
       participants: [student._id, teacher1._id],
       messages: [
         {
-          text: 'Hi! I reviewed your React Hooks assignment.',
+          text: 'Hi! I reviewed your Supply Chain Network Design assignment.',
           sender: teacher1._id,
         },
         {
-          text: 'Your implementation of useEffect was excellent!',
+          text: 'Your analysis of logistics optimization was excellent!',
           sender: teacher1._id,
         },
         {
-          text: 'Thank you so much! I spent a lot of time on that part.',
+          text: 'Thank you so much! I spent a lot of time researching best practices.',
           sender: student._id,
         },
       ],
-      lastMessage: 'Thank you so much! I spent a lot of time on that part.',
+      lastMessage: 'Thank you so much! I spent a lot of time researching best practices.',
     });
 
     console.log('✅ Database seeded successfully!');
