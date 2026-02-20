@@ -1,6 +1,6 @@
 import { Edit, BarChart3, Users } from 'lucide-react';
 
-const CourseTable = ({ courses }) => {
+const CourseTable = ({ courses, onEdit, onViewAnalytics }) => {
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       <table className="w-full">
@@ -51,10 +51,24 @@ const CourseTable = ({ courses }) => {
               </td>
               <td className="px-6 py-4">
                 <div className="flex items-center gap-2">
-                  <button className="p-2 hover:bg-indigo-50 rounded-lg transition-colors group">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit && onEdit(course);
+                    }}
+                    className="p-2 hover:bg-indigo-50 rounded-lg transition-colors group"
+                    title="Edit course"
+                  >
                     <Edit size={16} className="text-slate-400 group-hover:text-indigo-600" />
                   </button>
-                  <button className="p-2 hover:bg-indigo-50 rounded-lg transition-colors group">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onViewAnalytics && onViewAnalytics(course);
+                    }}
+                    className="p-2 hover:bg-indigo-50 rounded-lg transition-colors group"
+                    title="View analytics"
+                  >
                     <BarChart3 size={16} className="text-slate-400 group-hover:text-indigo-600" />
                   </button>
                 </div>

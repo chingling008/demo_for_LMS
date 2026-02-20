@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TeacherStats from '../components/TeacherStats';
 import CourseTable from '../components/CourseTable';
+import CourseEditModal from '../components/CourseEditModal';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import { dashboardApi, coursesApi } from '../services/api';
@@ -12,6 +13,9 @@ const TeacherDashboard = () => {
   const [courses, setCourses] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +39,38 @@ const TeacherDashboard = () => {
     fetchData();
   }, []);
 
+  const handleCreateCourse = () => {
+    setSelectedCourse({
+      id: (courses || teacherCourses).length + 1,
+      title: '',
+      description: '',
+      duration: '10 hours',
+      totalLessons: 10,
+      thumbnail: '📚',
+      status: 'Draft',
+      students: 0,
+      completion: 0,
+      revenue: 'R0',
+    });
+    setShowCreateModal(true);
+  };
+
+  const handleEditCourse = (course) => {
+    setSelectedCourse(course);
+    setShowEditModal(true);
+  };
+
+  const handleSaveCourse = (updatedCourse) => {
+    const updatedCourses = courses || teacherCourses;
+    setCourses(updatedCourses.map(c => 
+      c.id === updatedCourse.id ? updatedCourse : c
+    ));
+  };
+
+  const handleViewAnalytics = (course) => {
+    alert(`📊 Analytics for "${course.title}":\n\n• Students: ${course.students}\n• Completion: ${course.completion}%\n• Revenue: ${course.revenue}\n\nDetailed analytics coming soon!`);
+  };
+
   if (loading) return <LoadingSpinner fullScreen message="Loading dashboard..." />;
   if (error && !stats) return <ErrorMessage message={error} fullScreen />;
 
@@ -45,7 +81,10 @@ const TeacherDashboard = () => {
           <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
           <p className="text-slate-600 mt-1">Welcome back! Here's your overview.</p>
         </div>
-        <button className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+        <button 
+          onClick={handleCreateCourse}
+          className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors"
+        >
           <Plus size={20} />
           New Course
         </button>
@@ -57,7 +96,22 @@ const TeacherDashboard = () => {
         <h2 className="text-xl font-bold text-slate-900 mb-4">Your Courses</h2>
       </div>
       
-      <CourseTable courses={courses || teacherCourses} />
+      <CourseTable 
+        courses={courses || teacherCourses} 
+        onEdit={handleEditCourse}
+        onViewAnalytics={handleViewAnalytics}
+      />
+
+      {/* Course Edit/Create Modal */}
+      <CourseEditModal
+        isOpen={showEditModal || showCreateModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setShowCreateModal(false);
+        }}
+        course={selectedCourse}
+        onSave={handleSaveCourse}
+      />
     </div>
   );
 };

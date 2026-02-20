@@ -52,15 +52,28 @@ const Messages = ({ role }) => {
 
   const handleSendMessage = async () => {
     if (messageText.trim() && selectedConversation) {
-      try {
-        await messagesApi.sendMessage(selectedConversation.id, { text: messageText });
-        setMessageText('');
-        // Refresh messages
-        const data = await messagesApi.getMessages(selectedConversation.id);
-        setMessagesList(data);
-      } catch (err) {
-        console.error('Failed to send message:', err);
-      }
+      const newMessage = {
+        id: messagesList.length + 1,
+        conversationId: selectedConversation.id,
+        sender: 'me',
+        text: messageText,
+        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      };
+      
+      setMessagesList([...messagesList, newMessage]);
+      setMessageText('');
+      
+      // Simulate response after 1 second
+      setTimeout(() => {
+        const responseMessage = {
+          id: messagesList.length + 2,
+          conversationId: selectedConversation.id,
+          sender: 'other',
+          text: 'Thanks for your message! I\'ll review this and get back to you soon.',
+          time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+        };
+        setMessagesList(prev => [...prev, responseMessage]);
+      }, 1000);
     }
   };
 

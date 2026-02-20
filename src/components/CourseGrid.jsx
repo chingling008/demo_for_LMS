@@ -1,11 +1,12 @@
 import { Clock, BookOpen } from 'lucide-react';
 
-const CourseGrid = ({ courses }) => {
+const CourseGrid = ({ courses, onCourseClick }) => {
   return (
     <div className="grid grid-cols-3 gap-6">
       {courses.map((course) => (
         <div
           key={course.id}
+          onClick={() => onCourseClick && onCourseClick(course)}
           className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
         >
           {/* Thumbnail */}

@@ -1,6 +1,6 @@
 import { Play, Clock } from 'lucide-react';
 
-const ContinueLearning = ({ course }) => {
+const ContinueLearning = ({ course, onContinue }) => {
   return (
     <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-xl p-8 mb-6 text-white">
       <div className="flex items-center justify-between">
@@ -34,7 +34,10 @@ const ContinueLearning = ({ course }) => {
             </div>
           </div>
 
-          <button className="flex items-center gap-2 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-indigo-50 transition-colors">
+          <button 
+            onClick={onContinue}
+            className="flex items-center gap-2 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-indigo-50 transition-colors"
+          >
             <Play size={20} />
             Continue Lesson
           </button>

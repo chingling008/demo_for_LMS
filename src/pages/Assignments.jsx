@@ -2,6 +2,7 @@ import { Calendar, Clock, CheckCircle, AlertCircle, Upload } from 'lucide-react'
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
+import AssignmentSubmitModal from '../components/AssignmentSubmitModal';
 import { assignmentsApi } from '../services/api';
 import { studentAssignments, teacherAssignments } from '../data/mockData';
 
@@ -9,6 +10,8 @@ const Assignments = ({ role }) => {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -27,6 +30,20 @@ const Assignments = ({ role }) => {
     };
     fetchAssignments();
   }, [role]);
+
+  const handleSubmitClick = (assignment) => {
+    setSelectedAssignment(assignment);
+    setShowSubmitModal(true);
+  };
+
+  const handleSubmitAssignment = (submissionData) => {
+    // Update assignment status to 'Submitted'
+    setAssignments(assignments.map(a => 
+      a.id === submissionData.assignmentId 
+        ? { ...a, status: 'Submitted' }
+        : a
+    ));
+  };
 
   if (loading) return <LoadingSpinner fullScreen message="Loading assignments..." />;
   if (error && assignments.length === 0) return <ErrorMessage message={error} fullScreen />;
@@ -175,16 +192,25 @@ const Assignments = ({ role }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   {role === 'teacher' ? (
-                    <button className="text-indigo-600 hover:text-indigo-800 font-semibold">
+                    <button 
+                      onClick={() => alert(`📝 Grading interface for "${assignment.title}"\n\nThis feature allows you to review student submissions and provide grades and feedback.`)}
+                      className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                    >
                       Review
                     </button>
                   ) : assignment.status === 'Pending' ? (
-                    <button className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold ml-auto">
+                    <button 
+                      onClick={() => handleSubmitClick(assignment)}
+                      className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold ml-auto"
+                    >
                       <Upload size={16} />
                       Submit
                     </button>
                   ) : (
-                    <button className="text-slate-600 hover:text-slate-800 font-semibold">
+                    <button 
+                      onClick={() => alert(`📄 Assignment: ${assignment.title}\n\nStatus: ${assignment.status}\n${assignment.grade ? `Grade: ${assignment.grade}` : 'Not graded yet'}`)}
+                      className="text-slate-600 hover:text-slate-800 font-semibold"
+                    >
                       View
                     </button>
                   )}
@@ -194,6 +220,14 @@ const Assignments = ({ role }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Assignment Submit Modal */}
+      <AssignmentSubmitModal
+        isOpen={showSubmitModal}
+        onClose={() => setShowSubmitModal(false)}
+        assignment={selectedAssignment}
+        onSubmit={handleSubmitAssignment}
+      />
     </div>
   );
 };

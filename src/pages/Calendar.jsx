@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
+import EventDetailsModal from '../components/EventDetailsModal';
 import { calendarApi } from '../services/api';
 import { calendarEvents } from '../data/mockData';
 
@@ -10,6 +11,8 @@ const Calendar = ({ role }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showEventModal, setShowEventModal] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -29,6 +32,11 @@ const Calendar = ({ role }) => {
     };
     fetchEvents();
   }, [currentDate]);
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setShowEventModal(true);
+  };
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -90,14 +98,21 @@ const Calendar = ({ role }) => {
           {events.slice(0, 2).map((event, idx) => (
             <div
               key={idx}
-              className={`text-xs px-2 py-1 rounded text-white truncate ${getEventColor(event.type)}`}
+              onClick={() => handleEventClick(event)}
+              className={`text-xs px-2 py-1 rounded text-white truncate cursor-pointer hover:opacity-80 transition-opacity ${getEventColor(event.type)}`}
               title={event.title}
             >
               {event.title}
             </div>
           ))}
           {events.length > 2 && (
-            <div className="text-xs text-slate-500 px-2">
+            <div 
+              onClick={() => {
+                // Show all events for this day
+                alert(`📅 ${events.length} events on this day:\n\n${events.map(e => `• ${e.title}\n  ${e.time} - ${e.course}`).join('\n\n')}`);
+              }}
+              className="text-xs text-slate-500 px-2 cursor-pointer hover:text-slate-700"
+            >
               +{events.length - 2} more
             </div>
           )}
@@ -175,7 +190,11 @@ const Calendar = ({ role }) => {
         <h3 className="text-xl font-bold text-slate-900 mb-4">Upcoming Events</h3>
         <div className="space-y-3">
           {(events.length > 0 ? events : calendarEvents).slice(0, 5).map((event) => (
-            <div key={event.id} className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-lg transition-colors">
+            <div 
+              key={event.id} 
+              onClick={() => handleEventClick(event)}
+              className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
+            >
               <div className={`w-2 h-2 rounded-full ${getEventColor(event.type)}`}></div>
               <div className="flex-1">
                 <div className="font-semibold text-slate-900">{event.title}</div>
@@ -189,6 +208,13 @@ const Calendar = ({ role }) => {
           ))}
         </div>
       </div>
+
+      {/* Event Details Modal */}
+      <EventDetailsModal
+        isOpen={showEventModal}
+        onClose={() => setShowEventModal(false)}
+        event={selectedEvent}
+      />
     </div>
   );
 };
