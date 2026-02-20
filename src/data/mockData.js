@@ -26,7 +26,7 @@ export const teacherStats = [
   {
     id: 4,
     title: 'Total Revenue',
-    value: '$45.2k',
+    value: 'R45.2k',
     icon: 'dollarSign',
     trend: '+18%',
     trendUp: true,
@@ -39,7 +39,7 @@ export const teacherCourses = [
     title: 'Supply Chain Management Fundamentals',
     students: 324,
     completion: 78,
-    revenue: '$12,400',
+    revenue: 'R12,400',
     status: 'Active',
   },
   {
@@ -47,7 +47,7 @@ export const teacherCourses = [
     title: 'Business Analytics & Data-Driven Decisions',
     students: 256,
     completion: 65,
-    revenue: '$9,800',
+    revenue: 'R9,800',
     status: 'Active',
   },
   {
@@ -55,7 +55,7 @@ export const teacherCourses = [
     title: 'Logistics Operations & Transportation',
     students: 189,
     completion: 92,
-    revenue: '$7,200',
+    revenue: 'R7,200',
     status: 'Active',
   },
   {
@@ -63,7 +63,7 @@ export const teacherCourses = [
     title: 'Warehouse Management Systems',
     students: 412,
     completion: 54,
-    revenue: '$15,600',
+    revenue: 'R15,600',
     status: 'Active',
   },
   {
@@ -71,7 +71,7 @@ export const teacherCourses = [
     title: 'Strategic Sourcing & Procurement',
     students: 178,
     completion: 88,
-    revenue: '$6,900',
+    revenue: 'R6,900',
     status: 'Draft',
   },
 ];
