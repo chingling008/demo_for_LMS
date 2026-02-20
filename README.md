@@ -14,6 +14,19 @@ npm run dev
 
 The application will run at `http://localhost:5173/` with mock data. For full backend integration, see [API Integration Guide](./API_INTEGRATION.md).
 
+## 🌐 Deploy for Free
+
+Deploy your LMS to the web in minutes for investor demos:
+
+```bash
+# Option 1: Deploy to Vercel (Recommended)
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions including Vercel, Netlify, and other free hosting options.
+
 ## 🔧 Tech Stack
 
 - **Frontend**: React 19.2, Vite 7.3, Tailwind CSS 4.1
@@ -266,6 +279,30 @@ Icons from Lucide React are used throughout. Browse available icons at [lucide.d
 ✅ **Messaging System** with real-time UI  
 ✅ **Role-Based Navigation** that adapts to user type  
 ✅ **Comprehensive Mock Data** for realistic demo experience
+
+## 🚀 Deployment
+
+Deploy your LMS to production for free:
+
+### Vercel (Recommended - 2 minutes)
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+### Quick Deployment Steps
+1. Push code to GitHub
+2. Import to Vercel: [vercel.com/new](https://vercel.com/new)
+3. Click Deploy
+4. Get instant live URL: `https://your-lms.vercel.app`
+
+**Other Options**: Netlify, Render, GitHub Pages - see [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
+## 📖 Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide with all hosting options
+- **[API_INTEGRATION.md](./API_INTEGRATION.md)** - Backend API documentation and setup
 
 ## License
 
